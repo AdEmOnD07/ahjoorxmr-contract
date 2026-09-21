@@ -160,15 +160,6 @@ pub struct MultiSellerEscrowReleased {
     pub distributions: Vec<(Address, i128)>,
 }
 
-/// Event: Seller share delegated to another address (#317)
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct SellerShareDelegated {
-    pub escrow_id: u32,
-    pub original_seller: Address,
-    pub delegate: Address,
-}
-
 /// Event: Conditional release triggered by oracle (#318)
 #[contractevent]
 #[derive(Clone, Debug)]
@@ -287,34 +278,6 @@ pub struct BuyerRoleTransferred {
     pub escrow_id: u32,
     pub old_buyer: Address,
     pub new_buyer: Address,
-}
-
-/// Event: Dispute resolution entered cooling-off state
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct ResolutionCoolingOff {
-    pub escrow_id: u32,
-    pub buyer_percent: u32,
-    pub arbiter: Address,
-    pub cooling_off_ends_at: u64,
-}
-
-/// Event: Resolution error flagged by a party during cooling-off
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct ResolutionFlagged {
-    pub escrow_id: u32,
-    pub flagger: Address,
-    pub reason_hash: BytesN<32>,
-}
-
-/// Event: Resolution finalized and funds released
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct ResolutionFinalized {
-    pub escrow_id: u32,
-    pub buyer_percent: u32,
-    pub finalized_by: Address,
 }
 
 // --- Helper Emission Functions ---
@@ -806,26 +769,10 @@ pub struct MultiPartyEscrowCreated {
     pub total_amount: i128,
 }
 
-/// Event: Multi-party escrow released with distributions
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct MultiPartyEscrowReleased {
-    pub escrow_id: u32,
-    pub total_amount: i128,
-}
-
 pub fn emit_multi_party_escrow_created(e: &Env, escrow_id: u32, buyer_count: u32, total_amount: i128) {
     MultiPartyEscrowCreated {
         escrow_id,
         buyer_count,
-        total_amount,
-    }
-    .publish(e);
-}
-
-pub fn emit_multi_party_escrow_released(e: &Env, escrow_id: u32, total_amount: i128) {
-    MultiPartyEscrowReleased {
-        escrow_id,
         total_amount,
     }
     .publish(e);
@@ -1104,28 +1051,6 @@ pub fn emit_resolution_finalized(e: &Env, escrow_id: u32, buyer_percent: u32, ar
     );
 }
 
-// --- Issue #219: Multi-Party Split Release ---
-
-/// Event: Multi-seller escrow created with explicit payee list and shares
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct MultiSellerEscrowCreated {
-    pub escrow_id: u32,
-    pub sellers_count: u32,
-}
-
-pub fn emit_multi_seller_escrow_created(
-    e: &Env,
-    escrow_id: u32,
-    sellers: soroban_sdk::Vec<(Address, u32)>,
-) {
-    MultiSellerEscrowCreated {
-        escrow_id,
-        sellers_count: sellers.len(),
-    }
-    .publish(e);
-}
-
 // --- Mutual Amendment Protocol Events ---
 
 /// Event: Amendment proposed by buyer or seller
@@ -1229,43 +1154,6 @@ pub fn emit_amendment_cancelled(e: &Env, escrow_id: u32, nonce: u32, cancelled_b
     .publish(e);
 }
 
-// --- Inspector Events (#316) ---
-
-/// Event: Inspection result submitted
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct InspectionResultSubmitted {
-    pub escrow_id: u32,
-    pub inspector: Address,
-    pub approved: bool,
-    pub report_hash: BytesN<32>,
-}
-
-/// Event: Inspector updated
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct InspectorUpdated {
-    pub escrow_id: u32,
-    pub old_inspector: Address,
-    pub new_inspector: Address,
-}
-
-pub fn emit_inspection_result_submitted(
-    e: &Env,
-    escrow_id: u32,
-    inspector: Address,
-    approved: bool,
-    report_hash: BytesN<32>,
-) {
-    InspectionResultSubmitted {
-        escrow_id,
-        inspector,
-        approved,
-        report_hash,
-    }
-    .publish(e);
-}
-
 pub fn emit_multi_seller_escrow_released(
     env: &Env,
     escrow_id: u32,
@@ -1277,21 +1165,6 @@ pub fn emit_multi_seller_escrow_released(
     }
     .publish(env);
 }
-
-pub fn emit_seller_share_delegated(
-    env: &Env,
-    escrow_id: u32,
-    original_seller: Address,
-    delegate: Address,
-) {
-    SellerShareDelegated {
-        escrow_id,
-        original_seller,
-        delegate,
-    }
-    .publish(env);
-}
-
 
 pub fn emit_conditional_release_triggered(
     env: &Env,
@@ -1413,20 +1286,6 @@ pub fn emit_top_up_acknowledged(
         escrow_id,
         seller,
         new_total,
-    }
-    .publish(e);
-}
-
-pub fn emit_inspector_updated(
-    e: &Env,
-    escrow_id: u32,
-    old_inspector: Address,
-    new_inspector: Address,
-) {
-    InspectorUpdated {
-        escrow_id,
-        old_inspector,
-        new_inspector,
     }
     .publish(e);
 }

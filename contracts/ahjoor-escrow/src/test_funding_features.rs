@@ -10,7 +10,6 @@ use soroban_sdk::{
 struct Setup<'a> {
     env: Env,
     client: AhjoorEscrowContractClient<'a>,
-    admin: Address,
     token_addr: Address,
     token_client: TokenClient<'a>,
     token_admin: TokenAdminClient<'a>,
@@ -35,7 +34,6 @@ fn setup<'a>() -> Setup<'a> {
     Setup {
         env,
         client,
-        admin,
         token_addr,
         token_client,
         token_admin,

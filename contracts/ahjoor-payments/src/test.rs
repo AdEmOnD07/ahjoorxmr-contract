@@ -4104,10 +4104,6 @@ fn test_scheduled_payment_cannot_cancel_after_ready() {
 //  #122 Payment Categories and Tags
 // ===========================================================================
 
-// test_create_payment_with_category_indexed — commented out: create_payment_with_extras is not yet exported
-
-// test_get_payments_by_category_pagination — commented out: create_payment_with_extras is not yet exported
-
 #[test]
 fn test_get_payments_by_category_empty_returns_empty() {
     let s = setup();
@@ -4117,8 +4113,6 @@ fn test_get_payments_by_category_empty_returns_empty() {
     let results = s.client.get_payments_by_category(&merchant, &cat, &0, &10);
     assert_eq!(results.len(), 0);
 }
-
-// test_tags_exceeding_3_rejected — commented out: create_payment_with_extras is not yet exported
 
 #[test]
 fn test_no_category_does_not_appear_in_index() {
@@ -4401,14 +4395,6 @@ fn test_resume_not_paused_subscription_fails() {
 
     s.client.resume_subscription(&subscriber, &sub_id);
 }
-
-// ===========================================================================
-//  #125 Conditional Payment Release via Oracle Price Threshold
-// ===========================================================================
-
-// test_conditional_payment_stores_condition — commented out: create_payment_with_extras / release_condition not yet exported
-
-// test_payment_without_condition_completes_normally — commented out: create_payment_with_extras is not yet exported
 
 // ===========================================================================
 //  #127 Payment Authorization Pre-Approval (Two-Step Settlement)

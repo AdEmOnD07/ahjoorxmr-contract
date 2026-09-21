@@ -27,9 +27,7 @@ struct Harness<'a> {
     env: Env,
     client: AhjoorContractClient<'a>,
     token: token::Client<'a>,
-    token_addr: Address,
     contract_id: Address,
-    admin: Address,
     members: Vec<Address>,
 }
 
@@ -106,9 +104,7 @@ fn setup<'a>(min_reserve: i128) -> Harness<'a> {
         env,
         client,
         token,
-        token_addr,
         contract_id,
-        admin,
         members,
     }
 }

@@ -1,8 +1,6 @@
 #![cfg(test)]
 extern crate alloc;
 use super::*;
-use soroban_sdk::token::Client as TokenClient;
-use soroban_sdk::token::StellarAssetClient as TokenAdminClient;
 use soroban_sdk::{
     testutils::{Address as _, Ledger}, Address, BytesN, Env, String,
 };
@@ -12,9 +10,6 @@ struct TestSetup<'a> {
     client: AhjoorPaymentsContractClient<'a>,
     admin: Address,
     fee_recipient: Address,
-    token_addr: Address,
-    token_client: TokenClient<'a>,
-    token_admin_client: TokenAdminClient<'a>,
 }
 
 fn setup<'a>() -> TestSetup<'a> {
@@ -26,20 +21,12 @@ fn setup<'a>() -> TestSetup<'a> {
 
     let admin = Address::generate(&env);
     let fee_recipient = Address::generate(&env);
-    let token_addr = env
-        .register_stellar_asset_contract_v2(admin.clone())
-        .address();
-    let token_client = TokenClient::new(&env, &token_addr);
-    let token_admin_client = TokenAdminClient::new(&env, &token_addr);
 
     TestSetup {
         env,
         client,
         admin,
         fee_recipient,
-        token_addr,
-        token_client,
-        token_admin_client,
     }
 }
 

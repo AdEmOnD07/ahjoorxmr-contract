@@ -14,8 +14,6 @@ use soroban_sdk::{
 struct CollateralSetup<'a> {
     env: Env,
     client: AhjoorPaymentsContractClient<'a>,
-    admin: Address,
-    fee_recipient: Address,
     /// USDC token (used as collateral token)
     usdc_addr: Address,
     usdc_client: TokenClient<'a>,
@@ -58,8 +56,6 @@ fn collateral_setup<'a>() -> CollateralSetup<'a> {
     CollateralSetup {
         env,
         client,
-        admin,
-        fee_recipient,
         usdc_addr,
         usdc_client,
         usdc_admin_client,

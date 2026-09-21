@@ -2162,32 +2162,9 @@ pub struct MembershipCapSet {
     pub cap: u32,
 }
 
-/// Event: An address's tracked membership count was incremented.
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct MembershipCountIncremented {
-    pub member: Address,
-    pub new_count: u32,
-}
-
-/// Event: An address's tracked membership count was decremented.
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct MembershipCountDecremented {
-    pub member: Address,
-    pub new_count: u32,
-}
 
 pub fn emit_membership_cap_set(e: &Env, admin: Address, cap: u32) {
     MembershipCapSet { admin, cap }.publish(e);
-}
-
-pub fn emit_membership_count_incremented(e: &Env, member: Address, new_count: u32) {
-    MembershipCountIncremented { member, new_count }.publish(e);
-}
-
-pub fn emit_membership_count_decremented(e: &Env, member: Address, new_count: u32) {
-    MembershipCountDecremented { member, new_count }.publish(e);
 }
 
 // ── Group Cloning ─────────────────────────────────────────────────────────────

@@ -11722,76 +11722,6 @@ impl AhjoorContract {
             .unwrap_or(false)
     }
 
-    /// Internal: distributes `GoalRewardPool` equally among all non-defaulting
-    /// members once, gated by `GoalRewardDistributed`. Called when the collective
-    /// goal milestone (100%) is reached (#454).
-    fn distribute_goal_reward(env: &Env) {
-        let already_distributed: bool = env
-            .storage()
-            .instance()
-            .get(&DataKey5::GoalRewardDistributed)
-            .unwrap_or(false);
-        if already_distributed {
-            return;
-        }
-
-        let pool: i128 = env
-            .storage()
-            .instance()
-            .get(&DataKey5::GoalRewardPool)
-            .unwrap_or(0);
-
-        // Always gate, even if pool is empty, so this only ever fires once.
-        env.storage()
-            .instance()
-            .set(&DataKey5::GoalRewardDistributed, &true);
-
-        if pool <= 0 {
-            return;
-        }
-
-        let members: Vec<Address> = env
-            .storage()
-            .instance()
-            .get(&DataKey::Members)
-            .unwrap_or(Vec::new(env));
-        let default_count: Map<Address, u32> = env
-            .storage()
-            .instance()
-            .get(&DataKey::DefaultCount)
-            .unwrap_or(Map::new(env));
-
-        let mut eligible: Vec<Address> = Vec::new(env);
-        for m in members.iter() {
-            if default_count.get(m.clone()).unwrap_or(0) == 0 {
-                eligible.push_back(m);
-            }
-        }
-
-        let count = eligible.len() as i128;
-        if count == 0 {
-            return;
-        }
-
-        let per_member = pool / count;
-        if per_member <= 0 {
-            return;
-        }
-
-        let token_addr: Address = env.storage().instance().get(&DataKey::Token).unwrap();
-        let client = token::Client::new(env, &token_addr);
-
-        for m in eligible.iter() {
-            client.transfer(&env.current_contract_address(), &m, &per_member);
-            events::emit_milestone_reached(env, 0u32, m.clone(), 100u32, per_member);
-        }
-
-        // Any remainder from integer division stays in the pool; zero it out
-        // since it's been "spent" against this milestone.
-        env.storage()
-            .instance()
-            .set(&DataKey5::GoalRewardPool, &0i128);
-    }
 
     /// Create a new savings goal for a group member.
     pub fn create_savings_goal(
@@ -12383,58 +12313,6 @@ impl AhjoorContract {
             .unwrap_or(Map::<Address, u32>::new(env))
             .get(member.clone())
             .unwrap_or(0u32)
-    }
-
-    /// Internal helper — atomically increment a member's active-group count
-    /// and enforce the cap.  Call this whenever a member joins THIS group.
-    fn increment_membership_count(env: &Env, member: &Address) {
-        let cap = Self::load_membership_cap(env);
-        let mut counts: Map<Address, u32> = env
-            .storage()
-            .persistent()
-            .get(&DataKey5::MembershipCount)
-            .unwrap_or(Map::new(env));
-        let current = counts.get(member.clone()).unwrap_or(0u32);
-        if cap > 0 && current >= cap {
-            panic_with_error!(env, ExtError2::MembershipCapReached);
-        }
-        let new_count = current.saturating_add(1);
-        counts.set(member.clone(), new_count);
-        env.storage()
-            .persistent()
-            .set(&DataKey5::MembershipCount, &counts);
-        env.storage().persistent().extend_ttl(
-            &DataKey5::MembershipCount,
-            PERSISTENT_LIFETIME_THRESHOLD,
-            PERSISTENT_BUMP_AMOUNT,
-        );
-        events::emit_membership_count_incremented(env, member.clone(), new_count);
-    }
-
-    /// Internal helper — decrement a member's active-group count.
-    /// Call this when a member exits or is removed from THIS group.
-    fn decrement_membership_count(env: &Env, member: &Address) {
-        let mut counts: Map<Address, u32> = env
-            .storage()
-            .persistent()
-            .get(&DataKey5::MembershipCount)
-            .unwrap_or(Map::new(env));
-        let current = counts.get(member.clone()).unwrap_or(0u32);
-        let new_count = current.saturating_sub(1);
-        if new_count == 0 {
-            counts.remove(member.clone());
-        } else {
-            counts.set(member.clone(), new_count);
-        }
-        env.storage()
-            .persistent()
-            .set(&DataKey5::MembershipCount, &counts);
-        env.storage().persistent().extend_ttl(
-            &DataKey5::MembershipCount,
-            PERSISTENT_LIFETIME_THRESHOLD,
-            PERSISTENT_BUMP_AMOUNT,
-        );
-        events::emit_membership_count_decremented(env, member.clone(), new_count);
     }
 
     /// Admin (or co-admin with `ManageRoundConfig`): set the maximum number of

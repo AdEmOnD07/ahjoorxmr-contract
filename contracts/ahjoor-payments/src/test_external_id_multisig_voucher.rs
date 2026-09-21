@@ -11,8 +11,6 @@ use soroban_sdk::{testutils::{Address as _, Ledger}, vec, Address, BytesN, Env};
 struct Setup<'a> {
     env: Env,
     client: AhjoorPaymentsContractClient<'a>,
-    admin: Address,
-    fee_recipient: Address,
     merchant: Address,
     token_addr: Address,
     token_client: TokenClient<'a>,
@@ -37,7 +35,7 @@ fn setup<'a>() -> Setup<'a> {
     // Open mode so merchant doesn't need collateral
     client.set_merchant_open_mode(&true);
 
-    Setup { env, client, admin, fee_recipient, merchant, token_addr, token_client, token_admin_client }
+    Setup { env, client, merchant, token_addr, token_client, token_admin_client }
 }
 
 fn make_external_id(env: &Env, seed: u8) -> BytesN<32> {

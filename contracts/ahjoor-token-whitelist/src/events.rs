@@ -66,20 +66,8 @@ pub struct TokenMetadataSet {
     pub decimals: u32,
 }
 
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct TokenOracleUpdated {
-    pub token: Address,
-    pub old_oracle: Option<Address>,
-    pub new_oracle: Option<Address>,
-}
-
 pub fn emit_token_metadata_set(e: &Env, token: Address, symbol: soroban_sdk::String, decimals: u32) {
     TokenMetadataSet { token, symbol, decimals }.publish(e);
-}
-
-pub fn emit_token_oracle_updated(e: &Env, token: Address, old_oracle: Option<Address>, new_oracle: Option<Address>) {
-    TokenOracleUpdated { token, old_oracle, new_oracle }.publish(e);
 }
 
 #[contractevent]

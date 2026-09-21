@@ -10,7 +10,6 @@ use soroban_sdk::{
 struct TipSubSetup<'a> {
     env: Env,
     client: AhjoorPaymentsContractClient<'a>,
-    admin: Address,
     token_addr: Address,
     token_client: TokenClient<'a>,
     token_admin: TokenAdminClient<'a>,
@@ -36,7 +35,6 @@ fn tip_sub_setup<'a>() -> TipSubSetup<'a> {
     TipSubSetup {
         env,
         client,
-        admin,
         token_addr,
         token_client,
         token_admin,

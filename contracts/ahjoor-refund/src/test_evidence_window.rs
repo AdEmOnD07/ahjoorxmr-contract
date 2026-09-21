@@ -23,20 +23,6 @@ fn hash(env: &Env) -> BytesN<32> {
     BytesN::from_array(env, &[2u8; 32])
 }
 
-/// Helper: create a minimal refund record directly via storage for testing evidence window
-/// (bypasses payment contract cross-call)
-fn insert_requested_refund(
-    env: &Env,
-    client: &AhjoorRefundContractClient,
-    admin: &Address,
-    merchant: &Address,
-) -> u32 {
-    // We can't easily call request_refund without a real payment contract,
-    // so we test submit_refund_evidence by checking the panic paths.
-    // For integration-style tests we rely on the function signatures.
-    0
-}
-
 #[test]
 fn test_set_merchant_response_window() {
     let env = Env::default();

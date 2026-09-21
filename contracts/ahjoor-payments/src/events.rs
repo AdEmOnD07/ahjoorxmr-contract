@@ -798,17 +798,6 @@ pub fn emit_merchant_tier_updated(e: &Env, merchant: Address, new_tier_bps: u32,
     .publish(e);
 }
 
-#[allow(clippy::too_many_arguments)]
-/// Event: Payment tagged with a category (#122)
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct PaymentCategorized {
-    pub payment_id: u32,
-    pub merchant: Address,
-    pub category: Symbol,
-    pub tags: Vec<Symbol>,
-}
-
 /// Event: Bulk expire batch completed (#123)
 #[contractevent]
 #[derive(Clone, Debug)]
@@ -841,22 +830,6 @@ pub struct ConditionalPaymentAttempt {
     pub oracle_price: i128,
     pub threshold: i128,
     pub met: bool,
-}
-
-pub fn emit_payment_categorized(
-    e: &Env,
-    payment_id: u32,
-    merchant: Address,
-    category: Symbol,
-    tags: Vec<Symbol>,
-) {
-    PaymentCategorized {
-        payment_id,
-        merchant,
-        category,
-        tags,
-    }
-    .publish(e);
 }
 
 pub fn emit_bulk_expire_completed(e: &Env, expired_count: u32, refund_total: i128) {

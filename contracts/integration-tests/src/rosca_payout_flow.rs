@@ -12,8 +12,6 @@ struct TestEnvironment<'a> {
     env: Env,
     rosca: AhjoorContractClient<'a>,
     token_client: token::Client<'a>,
-    token_admin: token::StellarAssetClient<'a>,
-    admin: Address,
     members: Vec<Address>,
 }
 
@@ -95,8 +93,6 @@ impl<'a> TestEnvironment<'a> {
             env,
             rosca,
             token_client,
-            token_admin,
-            admin,
             members,
         }
     }

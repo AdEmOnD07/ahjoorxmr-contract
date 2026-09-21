@@ -638,35 +638,6 @@ pub fn emit_refund_auto_approved_by_threshold(e: &Env, refund_id: u32, amount: i
     RefundApprovedByLimit { refund_id, amount }.publish(e);
 }
 
-// --- Issue #245: Partial Refund Approval ---
-
-#[contractevent]
-#[derive(Clone, Debug)]
-pub struct RefundPartiallyApproved {
-    pub refund_id: u32,
-    pub merchant: Address,
-    pub approved_amount: i128,
-    pub requested_amount: i128,
-    pub remaining_unreturned: i128,
-}
-
-pub fn emit_refund_partially_approved(
-    e: &Env,
-    refund_id: u32,
-    merchant: Address,
-    approved_amount: i128,
-    requested_amount: i128,
-    remaining_unreturned: i128,
-) {
-    RefundPartiallyApproved {
-        refund_id,
-        merchant,
-        approved_amount,
-        requested_amount,
-        remaining_unreturned,
-    }
-    .publish(e);
-}
 
 // --- Issue #238: Refund Priority ---
 

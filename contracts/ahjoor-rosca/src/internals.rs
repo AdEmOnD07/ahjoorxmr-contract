@@ -1,34 +1,6 @@
 use crate::{errors::{Error, ExtError}, events, audit_trail, ContributionEntry, CycleSnapshotData, DataKey, DataKey2, DataKey3, DataKey4, PersistentKey, PayoutRecord, SlotBid, types::{InsuranceClaim, InsuranceCoverageMode}};
 use soroban_sdk::{panic_with_error, token, Address, Bytes, BytesN, Env, Map, Vec};
 
-/// Returns the timestamp (seconds) after which the grace period for a given round deadline expires.
-///
-/// Branches on `DataKey2::UseTimestampSchedule`:
-/// - timestamp-mode: adds `GracePeriodSeconds` (seconds) to `round_deadline`
-/// - ledger-mode: adds `GracePeriodLedgers` (treated as seconds for timestamp comparison)
-pub(crate) fn get_grace_deadline(env: &Env, round_deadline: u64) -> u64 {
-    let use_timestamp: bool = env
-        .storage()
-        .instance()
-        .get(&DataKey2::UseTimestampSchedule)
-        .unwrap_or(false);
-    if use_timestamp {
-        let grace_seconds: u64 = env
-            .storage()
-            .instance()
-            .get(&DataKey3::GracePeriodSeconds)
-            .unwrap_or(0);
-        round_deadline.saturating_add(grace_seconds)
-    } else {
-        let grace_ledgers: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey4::GracePeriodLedgers)
-            .unwrap_or(0);
-        round_deadline.saturating_add(grace_ledgers as u64)
-    }
-}
-
 const PERSISTENT_LIFETIME_THRESHOLD: u32 = 100_000;
 const PERSISTENT_BUMP_AMOUNT: u32 = 120_000;
 

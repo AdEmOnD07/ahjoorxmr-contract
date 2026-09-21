@@ -364,9 +364,6 @@ const DEFAULT_COUNTER_OFFER_ACCEPT_ON_EXPIRY: bool = true;
 
 const DEFAULT_MAX_BATCH_SIZE: u32 = 20;
 
-/// Default merchant response window: ~7 days at ~5s/ledger = 120_960 ledgers
-const DEFAULT_MERCHANT_RESPONSE_WINDOW_LEDGERS: u32 = 120_960;
-
 /// Default abuse block duration: ~30 days at ~5s/ledger = 518_400 ledgers
 const DEFAULT_BLOCK_DURATION_LEDGERS: u64 = 518_400;
 

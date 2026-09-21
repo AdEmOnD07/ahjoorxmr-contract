@@ -72,12 +72,9 @@ const TEMP_LIFETIME_THRESHOLD: u32 = 10_000;
 const TEMP_BUMP_AMOUNT: u32 = 15_000;
 
 const DEFAULT_MAX_BATCH_SIZE: u32 = 20;
-/// Maximum number of tags per payment (#122)
-const MAX_TAGS: u32 = 3;
 /// Maximum number of line items in invoice (#128)
 const MAX_INVOICE_LINE_ITEMS: u32 = 20;
 const MAX_SETTLEMENT_BATCH_SIZE: u32 = 50;
-const SETTLEMENT_FEE_BPS: i128 = 0;
 const DEFAULT_DISPUTE_TIMEOUT: u64 = 7 * 24 * 60 * 60; // 7 days in seconds
 /// Default rate limit: effectively disabled until admin configures stricter values.
 const DEFAULT_RATE_LIMIT_MAX_PAYMENTS: u32 = u32::MAX;
@@ -5796,113 +5793,6 @@ impl AhjoorPaymentsContract {
 
     // --- Payment Categories (#122) ---
 
-    /*
-    /// Create a payment with optional category, tags, and release condition.
-    /// Category and tags enable on-chain segmentation and analytics.
-    /// release_condition, if set, must be satisfied at completion time (#125).
-    #[allow(clippy::too_many_arguments)]
-    pub fn create_payment_with_extras(
-        env: Env,
-        customer: Address,
-        merchant: Address,
-        amount: i128,
-        token: Address,
-        category: Option<Symbol>,
-        tags: Option<Vec<Symbol>>,
-        release_condition: Option<OracleCondition>,
-    ) -> u32 {
-        Self::require_not_paused(&env);
-        customer.require_auth();
-
-        if amount <= 0 {
-            panic!("Payment amount must be positive");
-        }
-        if let Some(ref t) = tags {
-            if t.len() > MAX_TAGS {
-                panic!("Tags list cannot exceed 3 items");
-            }
-        }
-
-        Self::require_merchant_approved(&env, &merchant);
-        Self::enforce_rate_limit(&env, &customer, 1);
-
-        let client = token::Client::new(&env, &token);
-        client.transfer(&customer, &env.current_contract_address(), &amount);
-
-        let timeout: u64 = env
-            .storage()
-            .instance()
-            .get(&DataKey::PaymentTimeout)
-            .unwrap_or(DEFAULT_PAYMENT_TIMEOUT);
-        let now = env.ledger().timestamp();
-
-        let payment_id = Self::next_payment_id(&env);
-        let payment = Payment {
-            id: payment_id,
-            customer: customer.clone(),
-            merchant: merchant.clone(),
-            amount,
-            token: token.clone(),
-            status: PaymentStatus::Pending,
-            created_at: now,
-            expires_at: now + timeout,
-            refunded_amount: 0,
-            reference: None,
-            metadata: None,
-            split_recipients: None,
-            execute_after: 0,
-            category: category.clone(),
-            tags: tags.clone(),
-            capture_deadline: 0,
-            release_condition,
-        };
-
-        env.storage()
-            .persistent()
-            .set(&DataKey::Payment(payment_id), &payment);
-        env.storage().persistent().extend_ttl(
-            &DataKey::Payment(payment_id),
-            PERSISTENT_LIFETIME_THRESHOLD,
-            PERSISTENT_BUMP_AMOUNT,
-        );
-
-        Self::add_customer_payment(&env, &customer, payment_id);
-
-        // Index by category for analytics retrieval
-        if let Some(ref cat) = category {
-            let cat_key = DataKey::CategoryPayments(merchant.clone(), cat.clone());
-            let mut cat_ids: Vec<u32> = env
-                .storage()
-                .persistent()
-                .get(&cat_key)
-                .unwrap_or(Vec::new(&env));
-            cat_ids.push_back(payment_id);
-            env.storage().persistent().set(&cat_key, &cat_ids);
-            env.storage().persistent().extend_ttl(
-                &cat_key,
-                PERSISTENT_LIFETIME_THRESHOLD,
-                PERSISTENT_BUMP_AMOUNT,
-            );
-            events::emit_payment_categorized(
-                &env,
-                payment_id,
-                merchant.clone(),
-                cat.clone(),
-                tags.clone().unwrap_or(Vec::new(&env)),
-            );
-        }
-
-        Self::inc_global_created(&env);
-        Self::inc_merchant_created(&env, &merchant);
-        events::emit_payment_created(&env, payment_id, customer, merchant, amount, token);
-
-        env.storage()
-            .instance()
-            .extend_ttl(INSTANCE_LIFETIME_THRESHOLD, INSTANCE_BUMP_AMOUNT);
-
-        payment_id
-    }
-    */
     /// Return payment IDs for a merchant + category pair, paginated.
     /// page is 0-indexed. Empty result when page exceeds available data.
     pub fn get_payments_by_category(

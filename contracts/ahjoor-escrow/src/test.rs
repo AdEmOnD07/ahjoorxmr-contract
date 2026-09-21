@@ -4053,7 +4053,6 @@ use escrow_mock_oracle::EscrowMockOracle;
 struct OracleEscrowSetup<'a> {
     env: Env,
     client: AhjoorEscrowContractClient<'a>,
-    admin: Address,
     token_addr: Address,
     token_client: TokenClient<'a>,
     token_admin_client: TokenAdminClient<'a>,
@@ -4087,7 +4086,6 @@ fn setup_oracle_escrow<'a>() -> OracleEscrowSetup<'a> {
     OracleEscrowSetup {
         env,
         client,
-        admin,
         token_addr,
         token_client,
         token_admin_client,

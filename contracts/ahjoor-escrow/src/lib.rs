@@ -929,8 +929,6 @@ pub struct MilestoneState {
 
 const MAX_PROTOCOL_FEE_BPS: u32 = 200; // 2%
 const MAX_ARBITER_FEE_BPS: u32 = 1_000; // 10%
-const DEFAULT_RESOLUTION_COOLING_OFF_SECONDS: u64 = 24 * 60 * 60; // 24 hours
-const DEFAULT_SELLER_TRANSFER_VETO_WINDOW: u32 = 100; // ledgers
 const DEFAULT_AMENDMENT_EXPIRY_SECONDS: u64 = 7 * 24 * 60 * 60; // 7 days
 /// #420: Default veto cooldown — 7 days in seconds.
 const DEFAULT_VETO_COOLDOWN_SECONDS: u64 = 7 * 24 * 60 * 60;
