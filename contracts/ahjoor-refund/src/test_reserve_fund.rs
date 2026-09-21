@@ -57,7 +57,7 @@ fn test_deposit_and_withdraw_reserve() {
 fn test_withdraw_below_minimum_rejected() {
     let env = Env::default();
     env.mock_all_auths();
-    let (client, admin, _) = setup(&env);
+    let (client, admin, payment_contract) = setup(&env);
     let merchant = Address::generate(&env);
     let (token_addr, token_admin) = make_token(&env, &admin);
 
@@ -68,7 +68,7 @@ fn test_withdraw_below_minimum_rejected() {
     client.deposit_reserve(&merchant, &token_addr, &100i128);
     // Record volume=10000 → required=200, but balance=100 → already below required
     // Attempting to withdraw 50 more should breach minimum
-    client.record_payment_volume(&merchant, &10_000i128);
+    client.record_payment_volume(&payment_contract, &merchant, &10_000i128);
     client.withdraw_reserve(&merchant, &token_addr, &50i128);
 }
 
@@ -76,12 +76,12 @@ fn test_withdraw_below_minimum_rejected() {
 fn test_compliance_check_flags_merchant() {
     let env = Env::default();
     env.mock_all_auths();
-    let (client, admin, _) = setup(&env);
+    let (client, admin, payment_contract) = setup(&env);
     let merchant = Address::generate(&env);
 
     client.set_reserve_ratio_bps(&admin, &200u32);
     // Volume = 10000, required = 200, reserve = 0 → non-compliant
-    client.record_payment_volume(&merchant, &10_000i128);
+    client.record_payment_volume(&payment_contract, &merchant, &10_000i128);
     let compliant = client.check_reserve_compliance(&admin, &merchant);
     assert!(!compliant);
 }
@@ -233,7 +233,7 @@ fn test_reserve_balance_summary_activity_in_only_one_system() {
 fn test_is_merchant_flagged_flagged_and_unflagged() {
     let env = Env::default();
     env.mock_all_auths();
-    let (client, admin, _) = setup(&env);
+    let (client, admin, payment_contract) = setup(&env);
     let flagged = Address::generate(&env);
     let unflagged = Address::generate(&env);
 
@@ -242,7 +242,7 @@ fn test_is_merchant_flagged_flagged_and_unflagged() {
 
     client.set_reserve_ratio_bps(&admin, &200u32);
     // Volume = 10000, required = 200, reserve = 0 → non-compliant → flagged
-    client.record_payment_volume(&flagged, &10_000i128);
+    client.record_payment_volume(&payment_contract, &flagged, &10_000i128);
     assert!(!client.check_reserve_compliance(&admin, &flagged));
     assert!(client.is_merchant_flagged(&flagged));
     assert!(!client.is_merchant_flagged(&unflagged));
@@ -252,14 +252,14 @@ fn test_is_merchant_flagged_flagged_and_unflagged() {
 fn test_get_merchant_volume_with_and_without_volume() {
     let env = Env::default();
     env.mock_all_auths();
-    let (client, _admin, _) = setup(&env);
+    let (client, _admin, payment_contract) = setup(&env);
     let with_volume = Address::generate(&env);
     let without_volume = Address::generate(&env);
 
     assert_eq!(client.get_merchant_volume(&without_volume), 0i128);
 
-    client.record_payment_volume(&with_volume, &7_500i128);
-    client.record_payment_volume(&with_volume, &2_500i128);
+    client.record_payment_volume(&payment_contract, &with_volume, &7_500i128);
+    client.record_payment_volume(&payment_contract, &with_volume, &2_500i128);
     assert_eq!(client.get_merchant_volume(&with_volume), 10_000i128);
     assert_eq!(client.get_merchant_volume(&without_volume), 0i128);
 }

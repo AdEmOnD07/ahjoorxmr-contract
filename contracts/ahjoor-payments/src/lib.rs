@@ -1112,6 +1112,10 @@ pub enum DataKey3 {
     TipSubscriptionCounter,
     /// #805: tip subscription record
     TipSubscription(u32),
+    /// #804: rolling max invoice count cap for a merchant
+    InvoiceCountCap(Address),
+    /// #804: rolling invoice-count window state for a merchant
+    InvoiceCountWindow(Address),
 }
 
 mod events;

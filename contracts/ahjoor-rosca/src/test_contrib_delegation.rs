@@ -192,18 +192,16 @@ fn test_multiple_members_can_have_different_proxies() {
 }
 
 #[test]
+#[should_panic(expected = "expiry_ledger cannot be 0")]
 fn test_delegation_with_zero_expiry_is_immediate() {
     let env = Env::default();
     let member = Address::generate(&env);
     let proxy = Address::generate(&env);
     let (client, _admin, _token, _) = setup_rosca(&env, &[member.clone()]);
 
-    // Set expiry to current ledger sequence (immediate expiration)
-    let expiry = env.ledger().sequence() as u64;
-    client.delegate_contribution_rights(&member, &0u32, &proxy, &expiry);
-
-    let rec = client.get_member_delegation(&0u32, &member).unwrap();
-    assert_eq!(rec.expiry, expiry);
+    // expiry_ledger == 0 is reserved as an "infinite delegation" sentinel and
+    // is explicitly rejected rather than treated as an immediate expiry.
+    client.delegate_contribution_rights(&member, &0u32, &proxy, &0u64);
 }
 
 #[test]

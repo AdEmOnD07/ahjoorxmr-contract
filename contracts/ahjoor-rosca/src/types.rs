@@ -517,13 +517,19 @@ pub struct GroupCloneOverrides {
     pub max_skips_per_cycle: Option<u32>,
     pub use_timestamp_schedule: Option<bool>,
     pub round_duration_seconds: Option<u64>,
-    pub voting_mode: Option<VotingMode>,
+    /// `VotingMode` discriminant (0 = Equal, 1 = WeightedByContributions).
+    /// Stored as `u32` rather than `VotingMode` because contract-type enums
+    /// with explicit discriminants can't be nested in `Option<T>` under
+    /// soroban-sdk's XDR conversion machinery.
+    pub voting_mode: Option<u32>,
     pub auction_enabled: Option<bool>,
     pub auction_window_ledgers: Option<u64>,
     pub max_members: Option<u32>,
     pub reserve_enabled: Option<bool>,
     pub reserve_contribution_bps: Option<u32>,
-    pub strategy: Option<PayoutStrategy>,
+    /// `PayoutStrategy` discriminant (0 = RoundRobin, 1 = AdminAssigned). See
+    /// `voting_mode` doc for why this is a raw discriminant, not the enum.
+    pub strategy: Option<u32>,
     pub custom_order: Option<Vec<Address>>,
     pub collective_goal: Option<i128>,
     pub member_goals: Option<Map<Address, i128>>,

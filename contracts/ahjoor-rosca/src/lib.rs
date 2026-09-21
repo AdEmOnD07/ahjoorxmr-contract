@@ -47,6 +47,8 @@ mod test_token_whitelist;
 mod test_weighted_voting;
 // mod test_co_payer_split;        // source file not yet committed
 // mod test_contribution_receipts; // source file not yet committed
+mod clone_client;
+pub use clone_client::RoscaCloneClient;
 mod migration_client;
 pub use migration_client::RoscaMigrationClient;
 
@@ -12585,9 +12587,11 @@ impl AhjoorContract {
             .round_duration_seconds
             .unwrap_or_else(|| src.get_round_duration_seconds());
 
-        let voting_mode = overrides
-            .voting_mode
-            .unwrap_or_else(|| src.get_voting_mode());
+        let voting_mode = match overrides.voting_mode {
+            Some(0) => VotingMode::Equal,
+            Some(_) => VotingMode::WeightedByContributions,
+            None => src.get_voting_mode(),
+        };
 
         let auction_enabled = overrides
             .auction_enabled
@@ -12611,7 +12615,10 @@ impl AhjoorContract {
 
         // ── Build RoscaConfig ────────────────────────────────────────────────
         let config = RoscaConfig {
-            strategy: overrides.strategy.unwrap_or(PayoutStrategy::RoundRobin),
+            strategy: match overrides.strategy {
+                Some(1) => PayoutStrategy::AdminAssigned,
+                _ => PayoutStrategy::RoundRobin,
+            },
             custom_order: overrides.custom_order,
             penalty_amount,
             exit_penalty_bps,
