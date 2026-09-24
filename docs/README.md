@@ -1,3 +1,10 @@
+# Ahjoor Contract Documentation
+
+Guides to features implemented across the Ahjoor smart contracts.
+
+## ahjoor-payments
+
+- [Merchant Collateral](payments-collateral.md) — collateral requirements, minimum enforcement, deposit/withdrawal rules, and dispute slashing.
 # Ahjoor Documentation Index
 
 Welcome to the Ahjoor contract documentation directory. Below is a structured index of all documentation files, categorized by topic and smart contract module.
