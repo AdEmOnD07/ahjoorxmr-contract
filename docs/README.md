@@ -37,6 +37,7 @@ Welcome to the Ahjoor contract documentation directory. Below is a structured in
 - [**ROSCA Slot Auctions**](rosca-slot-auctions.md) — Comprehensive guide to plain open-bid and commit-reveal sealed-bid slot auctions in Ahjoor ROSCA groups.
 - [**ROSCA Round-Skip Mechanism**](rosca-skip-round.md) — Member eligibility, request flow, per-cycle skip limits, skip fee handling, and downstream settlement effects.
 - [**ROSCA Emergency Loan**](rosca-emergency-loan.md) — How members can draw emergency loans from the group reserve, repayment terms, default handling, and reserve management.
+- [**On-Chain Audit Trail in ROSCA**](rosca-audit-trail.md) — Comprehensive cycle audit trail recording, contribution history pagination, retention window management, and archival lifecycle.
 
 ---
 
@@ -76,3 +77,4 @@ Feature documentation for the Ahjoor smart contract suite. Each doc covers a spe
 | Document | Contract | Description |
 |---|---|---|
 | [ROSCA Savings Milestone Rewards](./rosca-savings-milestone-rewards.md) | `ahjoor-rosca` | Automatic token rewards when savings goal milestones are crossed |
+| [ROSCA Audit Trail](./rosca-audit-trail.md) | `ahjoor-rosca` | On-chain audit logging of cycle contributions, payouts, defaults, and member history |
