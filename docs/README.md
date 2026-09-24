@@ -1,3 +1,10 @@
+# Ahjoor Contract Documentation
+
+Guides to features implemented across the Ahjoor smart contracts.
+
+## ahjoor-payments
+
+- [Merchant Collateral](payments-collateral.md) — collateral requirements, minimum enforcement, deposit/withdrawal rules, and dispute slashing.
 # Ahjoor Documentation Index
 
 Welcome to the Ahjoor contract documentation directory. Below is a structured index of all documentation files, categorized by topic and smart contract module.
@@ -21,6 +28,7 @@ Welcome to the Ahjoor contract documentation directory. Below is a structured in
 
 - [**ROSCA Waitlist Flow**](rosca-waitlist.md) — Lifecycle of group waitlists, queueing rules, FIFO and reputation-weighted promotion, catch-up contributions, and cancellation.
 
+- [**ROSCA Waitlist Flow**](rosca-waitlist.md) — Lifecycle of group waitlists, queueing rules, FIFO and reputation-weighted promotion, catch-up contributions, and cancellation.
 - [**Weighted Voting in ROSCA Governance**](rosca-weighted-voting.md) — How a member's vote weight is computed from round contributions, applied during proposal voting, and tallied against dynamic quorum thresholds vs. equal voting.
 - [**ROSCA Governance Quorum Requirements**](rosca-governance-quorum.md) — Specification of per-ProposalType quorum thresholds, default percentages, admin overrides, resolution formulas, and administrative controls.
 - [**ROSCA Group Split Flow**](rosca-group-split.md) — Proposal creation, member assignment and confirmation, expiry handling, execution, refunds, and resulting group identifiers.
@@ -59,3 +67,12 @@ Welcome to the Ahjoor contract documentation directory. Below is a structured in
 
 - [**Refund Contract Guide**](refund.md) — Refund request, approval, and claim workflows, deadline boundary enforcement, senior arbiter escalation, and customer abuse score tracking.
 - [**Merchant Reserve Fund**](reserve-fund.md) — Refund contract merchant reserve balances and how they are tracked and used.
+# Ahjoor Contract Docs
+
+Feature documentation for the Ahjoor smart contract suite. Each doc covers a specific feature: its design, on-chain behaviour, and API.
+
+## Index
+
+| Document | Contract | Description |
+|---|---|---|
+| [ROSCA Savings Milestone Rewards](./rosca-savings-milestone-rewards.md) | `ahjoor-rosca` | Automatic token rewards when savings goal milestones are crossed |
