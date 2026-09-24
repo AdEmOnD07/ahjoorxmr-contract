@@ -339,4 +339,5 @@ For a comprehensive table of contents and topic breakdown, see the **[Documentat
 - [ROSCA Co-signer Guarantee](docs/rosca-cosigner-guarantee.md) — Co-signer nomination and default coverage mechanisms for ROSCA groups.
 - [Refund Contract Guide](docs/refund.md) — Refund request/approval flows, deadline boundary enforcement, senior escalation, and abuse score tracking.
 - [ROSCA Migration Guide](docs/migration-guide.md) — Upgrade and migration process for deployed ROSCA contracts.
+- [Multi-Party Approval in Escrow](docs/escrow-multiparty-approval.md) — N-of-M release approval configuration, threshold requirements, and approver voting.
 - [Weighted Voting in ROSCA Governance](docs/rosca-weighted-voting.md) — Member vote weight derivation from round contributions, proposal voting, and dynamic quorum tallying.
