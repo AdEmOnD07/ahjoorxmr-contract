@@ -56,3 +56,12 @@ Welcome to the Ahjoor contract documentation directory. Below is a structured in
 
 - [**Refund Contract Guide**](refund.md) — Refund request, approval, and claim workflows, deadline boundary enforcement, senior arbiter escalation, and customer abuse score tracking.
 - [**Merchant Reserve Fund**](reserve-fund.md) — Refund contract merchant reserve balances and how they are tracked and used.
+# Ahjoor Contract Docs
+
+Feature documentation for the Ahjoor smart contract suite. Each doc covers a specific feature: its design, on-chain behaviour, and API.
+
+## Index
+
+| Document | Contract | Description |
+|---|---|---|
+| [ROSCA Savings Milestone Rewards](./rosca-savings-milestone-rewards.md) | `ahjoor-rosca` | Automatic token rewards when savings goal milestones are crossed |
