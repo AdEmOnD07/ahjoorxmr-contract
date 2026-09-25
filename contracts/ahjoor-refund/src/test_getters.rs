@@ -118,3 +118,71 @@ fn test_get_merchant_response_window_after_set() {
     let window = refund_client.get_merchant_response_window();
     assert_eq!(window, expected_window);
 }
+
+// ===========================================================================
+//  Test: get_senior_review_window (#895)
+// ===========================================================================
+
+#[test]
+fn test_get_senior_review_window_default_and_after_set() {
+    let (_env, refund_client, _payment_client, admin, _token_addr, _tc, _token_admin) = setup_getters();
+
+    // Default applies before configuration
+    assert_eq!(refund_client.get_senior_review_window(), 34_560u32);
+
+    refund_client.set_senior_review_window(&admin, &300u32);
+    assert_eq!(refund_client.get_senior_review_window(), 300u32);
+}
+
+// ===========================================================================
+//  Test: get_abuse_score_decay_params (#896)
+// ===========================================================================
+
+#[test]
+fn test_get_abuse_score_decay_params_default_and_after_set() {
+    let (_env, refund_client, _payment_client, admin, _token_addr, _tc, _token_admin) = setup_getters();
+
+    // Default applies before configuration
+    assert_eq!(refund_client.get_abuse_score_decay_params(), (10_000u64, 5_000u32));
+
+    refund_client.set_abuse_score_decay_params(&admin, &2_000u64, &7_500u32);
+    assert_eq!(refund_client.get_abuse_score_decay_params(), (2_000u64, 7_500u32));
+}
+
+// ===========================================================================
+//  Test: get_global_refund_policy (#897)
+// ===========================================================================
+
+#[test]
+fn test_get_global_refund_policy_default_and_after_set() {
+    let (env, refund_client, _payment_client, _admin, _token_addr, _tc, _token_admin) = setup_getters();
+
+    // Default applies before configuration
+    assert_eq!(
+        refund_client.get_global_refund_policy(),
+        (u32::MAX, 10_000u32, Vec::new(&env))
+    );
+
+    let mut tags = Vec::new(&env);
+    tags.push_back(Symbol::new(&env, "digital"));
+    tags.push_back(Symbol::new(&env, "sale"));
+    // Seed storage exactly as `set_global_refund_policy` writes it. The setter
+    // calls `admin.require_auth()` and then `require_admin` (which calls it
+    // again), which `mock_all_auths` rejects as a duplicate authorization — a
+    // pre-existing issue in that setter (see `seed_global_refund_policy` in test.rs).
+    env.as_contract(&refund_client.address, || {
+        env.storage().instance().set(
+            &DataKey2::GlobalRefundPolicy,
+            &RefundPolicy {
+                eligible_window_ledgers: 17_280,
+                max_refund_bps: 5_000,
+                excluded_tags: tags.clone(),
+            },
+        );
+    });
+
+    assert_eq!(
+        refund_client.get_global_refund_policy(),
+        (17_280u32, 5_000u32, tags)
+    );
+}
