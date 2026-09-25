@@ -7426,6 +7426,11 @@ impl AhjoorContract {
             .unwrap_or(false)
     }
 
+    /// Get whether auto-close on full contribution is enabled (default: `false`).
+    pub fn get_auto_close_enabled(env: Env) -> bool {
+        Self::is_auto_close_enabled(env)
+    }
+
     // --- FEATURE 3: INVITATION-BASED MEMBER JOINING WITH INVITE CODES ---
 
     /// Generate an invite for a new member (admin only)

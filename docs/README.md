@@ -1,23 +1,10 @@
 # Ahjoor Contract Documentation
 
-Guides to features implemented across the Ahjoor smart contracts.
-
-## ahjoor-payments
-
-- [Merchant Collateral](payments-collateral.md) — collateral requirements, minimum enforcement, deposit/withdrawal rules, and dispute slashing.
-# Ahjoor Documentation Index
-
-Welcome to the Ahjoor contract documentation directory. Below is a structured index of all documentation files, categorized by topic and smart contract module.
+Welcome to the Ahjoor contract documentation directory. Below is a structured index of the feature guides, organized by the smart contract module each one covers.
 
 ---
 
-## 1. General & Platform Reference
-
-- [**Contract Error Codes**](errors.md) — Consolidated reference of every numeric `#[contracterror]` code exposed across all Ahjoor smart contracts.
-- [**ROSCA Contract Migration Guide**](migration-guide.md) — Step-by-step guide for upgrading and migrating active ROSCA contract deployments.
-- [**State Archival Troubleshooting**](state-archival.md) — Guide for checking archived status, restoring dormant contracts via Stellar CLI, and managing storage TTL.
-
----
+## `ahjoor-payments`
 
 ## 2. ROSCA Contract (`ahjoor-rosca`)
 
@@ -41,40 +28,11 @@ Welcome to the Ahjoor contract documentation directory. Below is a structured in
 
 ---
 
-## 3. Escrow Contract (`ahjoor-escrow`)
+## `ahjoor-escrow`
 
-- [**Escrow Dispute Flow**](escrow-dispute-flow.md) — Multi-step escrow dispute lifecycle, arbiter assignment, timeout enforcement, default winner rules, and resolution cooling-off periods.
-- [**Escrow Dispute Timeout Handling**](escrow-dispute-timeout.md) — The dispute timeout window (global default and per-escrow override) and the default resolution outcome when `enforce_dispute_timeout` is triggered.
-- [**Inspector Role and Scoring System**](inspector-role.md) — How an inspector is assigned to an escrow, their responsibilities and powers over the inspection gate, and how their accuracy score is calculated, updated on rulings and appeals, and enforced as a threshold for high-value escrows.
-- [**Escrow Bounty Board**](bounty-board.md) — Escrow bounty milestone payouts and related milestone-based release behavior.
-- [**Seller Veto Mechanism**](escrow-seller-veto.md) — How the seller raises a veto to block release, the cooldown window that limits re-vetoes, and how the admin overrides a veto.
 - [**Escrow Auto-Renewal**](escrow-auto-renewal.md) — How buyers can pre-approve renewal cycles for recurring service agreements, how auto-renewals are triggered on release, and how buyers can cancel future renewals.
 - [**Multi-Party Approval**](escrow-multiparty-approval.md) — N-of-M release approval configuration, threshold requirements, approver voting, and interactions with release and dispute flows.
 
----
+## `ahjoor-rosca`
 
-## 4. Payments Contract (`ahjoor-payments`)
-
-- [**Payments Authorization and Capture Flow**](payments-flow.md) — Two-step payment authorization and capture lifecycle, buyer trust tiers, and merchant collateral rules.
-- [**Merchant KYB Verification**](merchant-kyb.md) — KYB verification flow, payment creation gating, on-chain status checks, renewal and revocation.
-- [**Merchant Referral Program**](payments-referral.md) — Referral registration, commission calculation on platform fees, accrual windows, and claiming.
-- [**DAO Mediation for Disputed Payments**](dao-mediation.md) — On-chain DAO voting and resolution process for disputed merchant payments.
-- [**Multi-Token Invoice**](multi-token-invoice.md) — Guide to multi-token invoicing, oracle-based price feeds, slippage tolerance, and cross-token settlement.
-- [**Merchant Ban and Suspension Flow**](payments-merchant-ban.md) — Suspension and ban triggers, merchant appeals, reinstatement cooling-off, and re-appeal cooldowns.
-
----
-
-## 5. Refund Contract (`ahjoor-refund`)
-
-- [**Refund Contract Guide**](refund.md) — Refund request, approval, and claim workflows, deadline boundary enforcement, senior arbiter escalation, and customer abuse score tracking.
-- [**Merchant Reserve Fund**](reserve-fund.md) — Refund contract merchant reserve balances and how they are tracked and used.
-# Ahjoor Contract Docs
-
-Feature documentation for the Ahjoor smart contract suite. Each doc covers a specific feature: its design, on-chain behaviour, and API.
-
-## Index
-
-| Document | Contract | Description |
-|---|---|---|
-| [ROSCA Savings Milestone Rewards](./rosca-savings-milestone-rewards.md) | `ahjoor-rosca` | Automatic token rewards when savings goal milestones are crossed |
-| [ROSCA Audit Trail](./rosca-audit-trail.md) | `ahjoor-rosca` | On-chain audit logging of cycle contributions, payouts, defaults, and member history |
+- [**ROSCA Savings Milestone Rewards**](rosca-savings-milestone-rewards.md) — Automatic token rewards when savings goal milestones are crossed.

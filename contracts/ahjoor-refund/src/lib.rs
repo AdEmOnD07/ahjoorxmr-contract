@@ -4403,6 +4403,15 @@ impl AhjoorRefundContract {
             .extend_ttl(INSTANCE_LIFETIME_THRESHOLD, INSTANCE_BUMP_AMOUNT);
     }
 
+    /// Get the configured senior review deadline window in ledgers
+    /// (default: `DEFAULT_SENIOR_REVIEW_DEADLINE_LEDGERS` = 34_560, ~48 hours).
+    pub fn get_senior_review_window(env: Env) -> u32 {
+        env.storage()
+            .instance()
+            .get(&DataKey2::SeniorReviewDeadlineLedgers)
+            .unwrap_or(DEFAULT_SENIOR_REVIEW_DEADLINE_LEDGERS)
+    }
+
     /// Admin registers the senior arbiter address.
     pub fn set_senior_arbiter(env: Env, admin: Address, arbiter: Address) {
         Self::require_not_paused(&env);
@@ -4941,6 +4950,15 @@ impl AhjoorRefundContract {
         env.storage()
             .instance()
             .extend_ttl(INSTANCE_LIFETIME_THRESHOLD, INSTANCE_BUMP_AMOUNT);
+    }
+
+    /// Get the configured abuse score decay params as `(period_ledgers, factor_bps)`
+    /// (default: `(10_000, 5_000)` — halve the score every 10_000 ledgers).
+    pub fn get_abuse_score_decay_params(env: Env) -> (u64, u32) {
+        (
+            Self::get_abuse_decay_period_ledgers(env.clone()),
+            Self::get_abuse_score_decay_factor_bps(env),
+        )
     }
 
     /// Get the configured abuse score decay period in ledgers (default: 10_000).
@@ -5921,6 +5939,27 @@ impl AhjoorRefundContract {
                 excluded_tags,
             },
         );
+    }
+
+    /// Get the admin-configured global refund policy as
+    /// `(eligible_window_ledgers, max_refund_bps, excluded_tags)`.
+    /// Default if never set: `(u32::MAX, 10_000, [])` — no window limit, full
+    /// refunds allowed and no excluded tags (same fallback used for enforcement).
+    pub fn get_global_refund_policy(env: Env) -> (u32, u32, Vec<Symbol>) {
+        let policy: RefundPolicy = env
+            .storage()
+            .instance()
+            .get(&DataKey2::GlobalRefundPolicy)
+            .unwrap_or(RefundPolicy {
+                eligible_window_ledgers: u32::MAX,
+                max_refund_bps: 10_000,
+                excluded_tags: Vec::new(&env),
+            });
+        (
+            policy.eligible_window_ledgers,
+            policy.max_refund_bps,
+            policy.excluded_tags,
+        )
     }
 
     /// Validate refund against merchant's published policy.

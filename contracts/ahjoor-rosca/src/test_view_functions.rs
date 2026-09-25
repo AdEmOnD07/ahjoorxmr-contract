@@ -278,3 +278,19 @@ fn test_get_treasury_config_none_until_enabled() {
     assert_eq!(config.treasury_admin, treasury_admin);
     assert_eq!(config.enabled, true);
 }
+
+// ─── #899: get_auto_close_enabled ──────────────────────────────────────────
+
+#[test]
+fn test_get_auto_close_enabled_default_and_after_set() {
+    let (_env, client, _admin, _token_addr, _members) = setup_with_members(3, false, 0);
+
+    // Default applies before configuration
+    assert_eq!(client.get_auto_close_enabled(), false);
+
+    client.set_auto_close_enabled(&true);
+    assert_eq!(client.get_auto_close_enabled(), true);
+
+    client.set_auto_close_enabled(&false);
+    assert_eq!(client.get_auto_close_enabled(), false);
+}
